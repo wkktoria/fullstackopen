@@ -2,9 +2,9 @@ import { useState } from "react";
 
 const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>;
 
-const Stats = ({ text, count }) => (
+const Stats = ({ text, count, isPercentage = false }) => (
   <div>
-    {text} {count}
+    {text} {count} {isPercentage ? "%" : ""}
   </div>
 );
 
@@ -14,16 +14,38 @@ const App = () => {
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
 
+  const [all, setAll] = useState(0);
+  const [average, setAverage] = useState(0);
+  const [positive, setPositive] = useState(0);
+
   const handleGoodClick = () => {
-    setGood(good + 1);
+    const updatedGood = good + 1;
+    const updatedAll = all + 1;
+
+    setGood(updatedGood);
+    setAll(updatedAll);
+    setAverage((updatedGood - bad) / updatedAll);
+    setPositive((updatedGood / updatedAll) * 100);
   };
 
   const handleNeutralClick = () => {
+    const updatedNeutral = neutral + 1;
+    const updatedAll = all + 1;
+
     setNeutral(neutral + 1);
+    setAll(updatedAll);
+    setAverage((good - bad) / updatedAll);
+    setPositive((good / updatedAll) * 100);
   };
 
   const handleBadClick = () => {
-    setBad(bad + 1);
+    const updatedBad = bad + 1;
+    const updatedAll = all + 1;
+
+    setBad(updatedBad);
+    setAll(updatedAll);
+    setAverage((good - updatedBad) / updatedAll);
+    setPositive((good / updatedAll) * 100);
   };
 
   return (
@@ -36,6 +58,9 @@ const App = () => {
       <Stats text="good" count={good} />
       <Stats text="neutral" count={neutral} />
       <Stats text="bad" count={bad} />
+      <Stats text="all" count={all} />
+      <Stats text="average" count={average} />
+      <Stats text="positive" count={positive} isPercentage={true} />
     </div>
   );
 };
