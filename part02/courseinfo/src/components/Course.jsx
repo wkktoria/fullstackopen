@@ -17,20 +17,15 @@ const Content = ({ parts }) => {
 };
 
 const Course = ({ course }) => {
+  const total = course.parts.reduce((previous, part) => {
+    return previous + part.exercises;
+  }, 0);
+
   return (
     <div>
       <Header name={course.name} />
       <Content parts={course.parts} />
-      <b>
-        total of{" "}
-        {course.parts
-          .map((part) => part.exercises)
-          .reduce(
-            (accumulator, currentValue) => accumulator + currentValue,
-            0,
-          )}{" "}
-        exercises
-      </b>
+      <b>total of {total} exercises</b>
     </div>
   );
 };
