@@ -1,10 +1,3 @@
-// App
-//   Course
-//     Header
-//     Content
-//       Part
-//       Part
-
 const Header = ({ name }) => <h1>{name}</h1>;
 
 const Part = ({ name, exercises }) => (
@@ -28,6 +21,16 @@ const Course = ({ course }) => {
     <div>
       <Header name={course.name} />
       <Content parts={course.parts} />
+      <b>
+        total of{" "}
+        {course.parts
+          .map((part) => part.exercises)
+          .reduce(
+            (accumulator, currentValue) => accumulator + currentValue,
+            0,
+          )}{" "}
+        exercises
+      </b>
     </div>
   );
 };
