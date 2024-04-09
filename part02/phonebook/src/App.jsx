@@ -11,6 +11,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
   const [notificationMessage, setNotificationMessage] = useState(null);
+  const [isError, setIsError] = useState(false);
 
   const personsToShow = filter
     ? persons.filter((person) =>
@@ -47,17 +48,25 @@ const App = () => {
             setNewNumber("");
 
             setNotificationMessage(`Updated ${changedPerson.name}'s number`);
+
             setTimeout(() => {
               setNotificationMessage(null);
             }, 5000);
           })
           .catch(() => {
-            alert(
-              `${changedPerson.name} has been already deleted from the the server`,
-            );
             setPersons(
               persons.filter((person) => person.id !== changedPerson.id),
             );
+
+            setIsError(true);
+            setNotificationMessage(
+              `Information of ${changedPerson.name} has already been deleted from the server`,
+            );
+
+            setTimeout(() => {
+              setIsError(false);
+              setNotificationMessage(null);
+            }, 5000);
           });
       }
     } else {
@@ -67,6 +76,7 @@ const App = () => {
         setNewNumber("");
 
         setNotificationMessage(`Added ${personObject.name}`);
+
         setTimeout(() => {
           setNotificationMessage(null);
         }, 5000);
@@ -82,8 +92,19 @@ const App = () => {
           setPersons(persons.filter((person) => person.id !== id));
         })
         .catch(() => {
-          alert(`${name} has been already deleted from the the server`);
-          setPersons(persons.filter((person) => person.id !== id));
+          setPersons(
+            persons.filter((person) => person.id !== changedPerson.id),
+          );
+
+          setIsError(true);
+          setNotificationMessage(
+            `Information of ${changedPerson.name} has already been deleted from the server`,
+          );
+
+          setTimeout(() => {
+            setIsError(false);
+            setNotificationMessage(null);
+          }, 5000);
         });
     }
   };
@@ -109,7 +130,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={notificationMessage} />
+      <Notification message={notificationMessage} isError={isError} />
       <Filter value={filter} onChange={handleFilterChange} />
       <h3>Add a new</h3>
       <PersonForm
