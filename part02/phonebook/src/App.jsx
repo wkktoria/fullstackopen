@@ -18,13 +18,41 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault();
+
     const personObject = {
       name: newName,
       number: newNumber,
     };
+    const person = persons.find((person) => person.name === personObject.name);
 
-    if (persons.find((person) => person.name === personObject.name)) {
-      alert(`${newName} is already added to phonebook`);
+    if (person) {
+      if (
+        window.confirm(
+          `${newName} is already added to phonebook, replace the old number with a new one?`,
+        )
+      ) {
+        const changedPerson = { ...person, number: newNumber };
+
+        personService
+          .update(changedPerson.id, changedPerson)
+          .then((returnedPerson) => {
+            setPersons(
+              persons.map((person) =>
+                person.id !== changedPerson.id ? person : returnedPerson,
+              ),
+            );
+            setNewName("");
+            setNewNumber("");
+          })
+          .catch(() => {
+            alert(
+              `${changedPerson.name} has been already deleted from the the server`,
+            );
+            setPersons(
+              persons.filter((person) => person.id !== changedPerson.id),
+            );
+          });
+      }
     } else {
       personService.create(personObject).then((returnedPerson) => {
         setPersons(persons.concat(returnedPerson));
