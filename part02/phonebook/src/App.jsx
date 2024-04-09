@@ -19,7 +19,6 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault();
     const personObject = {
-      id: persons.length + 1,
       name: newName,
       number: newNumber,
     };
@@ -32,6 +31,20 @@ const App = () => {
         setNewName("");
         setNewNumber("");
       });
+    }
+  };
+
+  const removePerson = (name, id) => {
+    if (window.confirm(`Delete ${name}?`)) {
+      personService
+        .remove(id)
+        .then(() => {
+          setPersons(persons.filter((person) => person.id !== id));
+        })
+        .catch(() => {
+          alert(`${name} has been already deleted from the the server`);
+          setPersons(persons.filter((person) => person.id !== id));
+        });
     }
   };
 
@@ -66,7 +79,7 @@ const App = () => {
         onChangeNumber={handleNumberChange}
       />
       <h3>Numbers</h3>
-      <Persons toShow={personsToShow} />
+      <Persons toShow={personsToShow} onClickDelete={removePerson} />
     </div>
   );
 };
