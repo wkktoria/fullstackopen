@@ -1,8 +1,8 @@
-import CountryInfo from "./CountryInfo";
+import Country from "./Country";
 
-const Countries = ({ toShow }) => {
+const Countries = ({ toShow, onClick }) => {
   if (toShow.length === 1) {
-    return <CountryInfo country={toShow[0]} />;
+    return <Country country={toShow[0]} />;
   } else if (toShow.length > 10) {
     return <div>Too many matches, specify another filter</div>;
   }
@@ -10,7 +10,12 @@ const Countries = ({ toShow }) => {
   return (
     <div>
       {toShow.map((country) => (
-        <div key={country.name.official}>{country.name.common}</div>
+        <div key={country.name.official}>
+          {country.name.common}
+          <button value={country.name.official} onClick={onClick}>
+            show
+          </button>
+        </div>
       ))}
     </div>
   );

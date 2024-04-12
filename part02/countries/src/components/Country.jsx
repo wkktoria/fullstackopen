@@ -1,4 +1,4 @@
-const CountryInfo = ({ country }) => {
+const Country = ({ country }) => {
   return (
     <div>
       <h2>{country.name.common}</h2>
@@ -16,4 +16,4 @@ const CountryInfo = ({ country }) => {
   );
 };
 
-export default CountryInfo;
+export default Country;

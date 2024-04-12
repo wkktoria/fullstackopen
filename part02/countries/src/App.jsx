@@ -16,11 +16,18 @@ const App = () => {
     setFilter(event.target.value);
   };
 
+  const handleCountryShow = (event) => {
+    const countryToShow = countries.find(
+      (country) => country.name.official === event.target.value,
+    );
+    setCountries([countryToShow]);
+  };
+
   useEffect(() => {
     countryService.getAll().then((initialCountries) => {
       setCountries(initialCountries);
     });
-  }, []);
+  }, [filter]);
 
   if (!countries) {
     return null;
@@ -29,7 +36,7 @@ const App = () => {
   return (
     <div>
       find countries <input value={filter} onChange={handleFilterChange} />
-      <Countries toShow={countriesToShow} />
+      <Countries toShow={countriesToShow} onClick={handleCountryShow} />
     </div>
   );
 };
