@@ -92,13 +92,11 @@ const App = () => {
           setPersons(persons.filter((person) => person.id !== id));
         })
         .catch(() => {
-          setPersons(
-            persons.filter((person) => person.id !== changedPerson.id),
-          );
+          setPersons(persons.filter((person) => person.id !== id));
 
           setIsError(true);
           setNotificationMessage(
-            `Information of ${changedPerson.name} has already been deleted from the server`,
+            `Information of ${name} has already been deleted from the server`,
           );
 
           setTimeout(() => {
