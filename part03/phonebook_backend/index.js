@@ -1,4 +1,5 @@
 const express = require("express");
+var morgan = require("morgan");
 const app = express();
 
 let persons = [
@@ -28,6 +29,7 @@ const generateId = () => {
   return Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
 };
 
+app.use(morgan("tiny"));
 app.use(express.json());
 
 app.get("/info", (request, response) => {
