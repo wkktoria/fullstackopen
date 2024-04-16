@@ -53,15 +53,13 @@ const App = () => {
               setNotificationMessage(null);
             }, 5000);
           })
-          .catch(() => {
+          .catch((error) => {
             setPersons(
               persons.filter((person) => person.id !== changedPerson.id),
             );
 
             setIsError(true);
-            setNotificationMessage(
-              `Information of ${changedPerson.name} has already been deleted from the server`,
-            );
+            setNotificationMessage(error.response.data.error);
 
             setTimeout(() => {
               setIsError(false);
@@ -70,17 +68,28 @@ const App = () => {
           });
       }
     } else {
-      personService.create(personObject).then((returnedPerson) => {
-        setPersons(persons.concat(returnedPerson));
-        setNewName("");
-        setNewNumber("");
+      personService
+        .create(personObject)
+        .then((returnedPerson) => {
+          setPersons(persons.concat(returnedPerson));
+          setNewName("");
+          setNewNumber("");
 
-        setNotificationMessage(`Added ${personObject.name}`);
+          setNotificationMessage(`Added ${personObject.name}`);
 
-        setTimeout(() => {
-          setNotificationMessage(null);
-        }, 5000);
-      });
+          setTimeout(() => {
+            setNotificationMessage(null);
+          }, 5000);
+        })
+        .catch((error) => {
+          setIsError(true);
+          setNotificationMessage(error.response.data.error);
+
+          setTimeout(() => {
+            setIsError(false);
+            setNotificationMessage(null);
+          }, 5000);
+        });
     }
   };
 
