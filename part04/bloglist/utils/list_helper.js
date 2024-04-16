@@ -40,9 +40,38 @@ const mostBlogs = (blogs) => {
   };
 };
 
+const mostLikes = (blogs) => {
+  if (blogs.length === 0) {
+    return {};
+  }
+
+  const totalLikes = {};
+
+  blogs.forEach((blog) => {
+    const { author, likes } = blog;
+
+    if (totalLikes[author]) {
+      totalLikes[author] += likes;
+    } else {
+      totalLikes[author] = likes;
+    }
+  });
+
+  const mostAuthor = lodash.maxBy(
+    lodash.keys(totalLikes),
+    (author) => totalLikes[author],
+  );
+
+  return {
+    author: mostAuthor,
+    likes: totalLikes[mostAuthor],
+  };
+};
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
   mostBlogs,
+  mostLikes,
 };
