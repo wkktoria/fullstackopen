@@ -26,7 +26,9 @@ const App = () => {
       name: newName,
       number: newNumber,
     };
-    const person = persons.find((person) => person.name === personObject.name);
+    const person = persons.find(
+      (person) => person.name.toUpperCase() === personObject.name.toUpperCase(),
+    );
 
     if (person) {
       if (
