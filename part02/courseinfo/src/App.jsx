@@ -15,12 +15,9 @@ const Part = ({ name, exercises }) => (
 );
 
 const Total = ({ parts }) => {
-  const allExercises = parts.reduce(
-    (prev, current) => prev + current.exercises,
-    0
-  );
+  const total = parts.reduce((prev, current) => prev + current.exercises, 0);
 
-  return <b>total of {allExercises} exercises</b>;
+  return <b>total of {total} exercises</b>;
 };
 
 const Course = ({ course }) => {
