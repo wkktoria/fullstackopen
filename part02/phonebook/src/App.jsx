@@ -39,7 +39,7 @@ const App = () => {
   const handleAddClick = (event) => {
     event.preventDefault();
     const newPerson = {
-      id: persons.length + 1,
+      id: (persons.length + 1).toString(),
       name: newName,
       number: newNumber,
     };
@@ -55,6 +55,18 @@ const App = () => {
         setPersons(persons.concat(returnedPerson));
         setNewName("");
         setNewNumber("");
+      });
+    }
+  };
+
+  const handleDeleteClick = (event) => {
+    event.preventDefault();
+    const id = event.target.value;
+    const personToDelete = persons.find((person) => person.id === id);
+
+    if (window.confirm(`Delete ${personToDelete.name}?`)) {
+      personService.deletePerson(id).then((deletedPerson) => {
+        setPersons(persons.filter((person) => person.id !== deletedPerson.id));
       });
     }
   };
@@ -75,7 +87,7 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-      <Persons persons={personsToShow} />
+      <Persons persons={personsToShow} onDeleteClick={handleDeleteClick} />
     </div>
   );
 };
