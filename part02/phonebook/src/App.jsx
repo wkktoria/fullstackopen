@@ -4,12 +4,25 @@ import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import personService from "./services/persons";
 
+const Notification = ({ message }) => {
+  if (!message) {
+    return null;
+  }
+
+  return (
+    <div id="notification" className="success">
+      {message}
+    </div>
+  );
+};
+
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
   const [showAll, setShowAll] = useState(true);
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
     personService.getAll().then((initialValue) => {
@@ -57,6 +70,11 @@ const App = () => {
         personService
           .update(id, updatedPerson)
           .then((returnedPerson) => {
+            setSuccessMessage(`Updated ${returnedPerson.name}'s number`);
+            setTimeout(() => {
+              setSuccessMessage(null);
+            }, 5000);
+
             setPersons(
               persons.map((person) =>
                 person.id === returnedPerson.id ? returnedPerson : person
@@ -77,6 +95,11 @@ const App = () => {
         number: newNumber,
       };
       personService.create(newPerson).then((returnedPerson) => {
+        setSuccessMessage(`Added ${returnedPerson.name}`);
+        setTimeout(() => {
+          setSuccessMessage(null);
+        }, 5000);
+
         setPersons(persons.concat(returnedPerson));
         setNewName("");
         setNewNumber("");
@@ -98,7 +121,8 @@ const App = () => {
 
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h1>Phonebook</h1>
+      <Notification message={successMessage} />
 
       <Filter value={filter} onChange={handleFilterChange} />
 
