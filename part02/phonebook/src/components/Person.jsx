@@ -1,6 +1,6 @@
-const Person = ({ id, name, number }) => {
+const Person = ({ name, number }) => {
   return (
-    <div key={id}>
+    <div>
       {name} {number}
     </div>
   );
