@@ -38,19 +38,44 @@ const App = () => {
 
   const handleAddClick = (event) => {
     event.preventDefault();
-    const newPerson = {
-      id: (persons.length + 1).toString(),
-      name: newName,
-      number: newNumber,
-    };
+    const personInDb = persons.find(
+      (person) => person.name.toLowerCase() === newName.toLowerCase()
+    );
 
-    if (
-      persons.some(
-        (person) => person.name.toLowerCase() === newPerson.name.toLowerCase()
-      )
-    ) {
-      alert(`${newPerson.name} is already added to phonebook`);
+    if (personInDb) {
+      if (
+        window.confirm(
+          `${newName} is already added to phonebook, replace the old number with a new one?`
+        )
+      ) {
+        const id = personInDb.id;
+        const updatedPerson = {
+          id,
+          name: personInDb.name,
+          number: newNumber,
+        };
+        personService
+          .update(id, updatedPerson)
+          .then((returnedPerson) => {
+            setPersons(
+              persons.map((person) =>
+                person.id === returnedPerson.id ? returnedPerson : person
+              )
+            );
+            setNewName("");
+            setNewNumber("");
+          })
+          .catch(() => {
+            alert(`${newName} was already deleted from server`);
+            setPersons(persons.filter((person) => person.id !== id));
+          });
+      }
     } else {
+      const newPerson = {
+        id: (persons.length + 1).toString(),
+        name: newName,
+        number: newNumber,
+      };
       personService.create(newPerson).then((returnedPerson) => {
         setPersons(persons.concat(returnedPerson));
         setNewName("");
