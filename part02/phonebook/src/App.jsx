@@ -4,13 +4,13 @@ import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import personService from "./services/persons";
 
-const Notification = ({ message }) => {
+const Notification = ({ message, isSuccess }) => {
   if (!message) {
     return null;
   }
 
   return (
-    <div id="notification" className="success">
+    <div id="notification" className={isSuccess ? "success" : "error"}>
       {message}
     </div>
   );
@@ -22,7 +22,8 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
   const [showAll, setShowAll] = useState(true);
-  const [successMessage, setSuccessMessage] = useState("");
+  const [message, setMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
 
   useEffect(() => {
     personService.getAll().then((initialValue) => {
@@ -70,9 +71,10 @@ const App = () => {
         personService
           .update(id, updatedPerson)
           .then((returnedPerson) => {
-            setSuccessMessage(`Updated ${returnedPerson.name}'s number`);
+            setIsSuccess(true);
+            setMessage(`Updated ${returnedPerson.name}'s number`);
             setTimeout(() => {
-              setSuccessMessage(null);
+              setMessage(null);
             }, 5000);
 
             setPersons(
@@ -84,7 +86,14 @@ const App = () => {
             setNewNumber("");
           })
           .catch(() => {
-            alert(`${newName} was already deleted from server`);
+            setIsSuccess(false);
+            setMessage(
+              `Information of ${newName} has already been removed from server`
+            );
+            setTimeout(() => {
+              setMessage(null);
+            }, 5000);
+
             setPersons(persons.filter((person) => person.id !== id));
           });
       }
@@ -95,9 +104,10 @@ const App = () => {
         number: newNumber,
       };
       personService.create(newPerson).then((returnedPerson) => {
-        setSuccessMessage(`Added ${returnedPerson.name}`);
+        setIsSuccess(true);
+        setMessage(`Added ${returnedPerson.name}`);
         setTimeout(() => {
-          setSuccessMessage(null);
+          setMessage(null);
         }, 5000);
 
         setPersons(persons.concat(returnedPerson));
@@ -113,16 +123,37 @@ const App = () => {
     const personToDelete = persons.find((person) => person.id === id);
 
     if (window.confirm(`Delete ${personToDelete.name}?`)) {
-      personService.deletePerson(id).then((deletedPerson) => {
-        setPersons(persons.filter((person) => person.id !== deletedPerson.id));
-      });
+      personService
+        .deletePerson(id)
+        .then((deletedPerson) => {
+          setIsSuccess(true);
+          setMessage(`Deleted ${personToDelete.name}`);
+          setTimeout(() => {
+            setMessage(null);
+          }, 5000);
+
+          setPersons(
+            persons.filter((person) => person.id !== deletedPerson.id)
+          );
+        })
+        .catch(() => {
+          setIsSuccess(false);
+          setMessage(
+            `Information of ${personToDelete.name} has already been removed from server`
+          );
+          setTimeout(() => {
+            setMessage(null);
+          }, 5000);
+
+          setPersons(persons.filter((person) => person.id !== id));
+        });
     }
   };
 
   return (
     <div>
       <h1>Phonebook</h1>
-      <Notification message={successMessage} />
+      <Notification message={message} isSuccess={isSuccess} />
 
       <Filter value={filter} onChange={handleFilterChange} />
 
