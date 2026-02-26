@@ -40,7 +40,8 @@ function App() {
       {countriesToShow.length === 1 ? (
         <Country
           name={countriesToShow[0].name.common}
-          capital={countriesToShow[0].capital}
+          code={countriesToShow[0].cca2}
+          capital={countriesToShow[0].capital[0]}
           area={countriesToShow[0].area}
           languages={countriesToShow[0].languages}
           flags={countriesToShow[0].flags}
