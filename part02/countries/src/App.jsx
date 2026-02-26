@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Filter from "./components/Filter";
 import countryService from "./services/countries";
 import Country from "./components/Country";
+import CountryLine from "./components/CountryLine";
 
 function App() {
   const [countries, setCountries] = useState([]);
@@ -27,6 +28,11 @@ function App() {
     setShowAll(false);
   };
 
+  const handleOnClick = (event, name) => {
+    setFilter(name);
+    setShowAll(false);
+  };
+
   return (
     <>
       <Filter value={filter} onChange={handleFilterChange} />
@@ -43,7 +49,11 @@ function App() {
         <p>Too many matches, specify another filter</p>
       ) : (
         countriesToShow.map((country) => (
-          <div key={country.name.common}>{country.name.common}</div>
+          <CountryLine
+            key={country.name.common}
+            name={country.name.common}
+            onClick={(event) => handleOnClick(event, country.name.common)}
+          />
         ))
       )}
     </>
