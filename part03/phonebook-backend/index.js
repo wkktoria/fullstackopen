@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+app.use(express.json());
 
 let persons = [
   {
@@ -43,6 +44,20 @@ app.delete("/api/persons/:id", (request, response) => {
   const id = request.params.id;
   persons = persons.filter((person) => person.id !== id);
   response.status(204).end();
+});
+
+app.post("/api/persons", (request, response) => {
+  const id = Math.abs(
+    Math.random() * (Number.MAX_SAFE_INTEGER - Number.MIN_SAFE_INTEGER) +
+      Number.MIN_SAFE_INTEGER,
+  );
+
+  const person = request.body;
+  person.id = String(id);
+
+  persons = persons.concat(person);
+
+  response.json(person);
 });
 
 app.get("/info", (request, response) => {
