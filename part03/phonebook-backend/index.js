@@ -52,8 +52,31 @@ app.post("/api/persons", (request, response) => {
       Number.MIN_SAFE_INTEGER,
   );
 
-  const person = request.body;
-  person.id = String(id);
+  const body = request.body;
+
+  if (!body.name) {
+    return response.status(400).json({
+      error: "name missing",
+    });
+  }
+
+  if (!body.number) {
+    return response.status(400).json({
+      error: "number missing",
+    });
+  }
+
+  if (persons.find((person) => person.name === body.name)) {
+    return response.status(400).json({
+      error: "name must be unique",
+    });
+  }
+
+  const person = {
+    id: String(id),
+    name: body.name,
+    number: body.number,
+  };
 
   persons = persons.concat(person);
 
