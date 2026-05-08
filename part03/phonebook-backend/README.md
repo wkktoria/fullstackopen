@@ -1,3 +1,3 @@
 # Phonebook Backend
 
-Link: https://phonebook-epji.onrender.com/api/persons
+Link: https://phonebook-epji.onrender.com
